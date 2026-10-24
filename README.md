@@ -1,6 +1,3 @@
-# EvoraLab_Reto60
-Experiencia hipermedia interactiva de desafíos de 60 segundos
-<!doctype html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
@@ -11,10 +8,16 @@ Experiencia hipermedia interactiva de desafíos de 60 segundos
 :root{--bg:#060b0e;--panel:#0b1418;--line:#1b3a42;--green:#42e8e0;--muted:#9bb2b5;--white:#f2fbfb;--cyan:#4de7e2}
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0%,#102a30 0%,var(--bg) 48%);color:var(--white);font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;min-height:100vh}
 button,input,select{font:inherit}button{cursor:pointer;touch-action:manipulation}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #b1fffb;outline-offset:3px}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
 .app{max-width:920px;margin:auto;padding:22px 18px 40px;min-height:100vh}
 header{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #1b343a;padding:8px 0 16px;margin-bottom:26px}
 .logo{font-weight:900;font-style:italic;letter-spacing:.06em}.logo span{color:var(--green)}.status{font-size:.7rem;color:var(--green);letter-spacing:.18em}
-.screen{display:none;animation:enter .28s ease}.screen.active{display:block}@keyframes enter{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.screen{display:none}.screen.active{display:block;animation:enter .38s cubic-bezier(.2,.75,.25,1)}@keyframes enter{from{opacity:0;transform:translateY(14px);filter:blur(4px)}to{opacity:1;transform:none;filter:blur(0)}}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 24px #42e8e01a,inset 0 0 24px #42e8e008}50%{box-shadow:0 0 42px #42e8e044,inset 0 0 32px #42e8e014}}
+@keyframes revealCard{0%{opacity:0;transform:perspective(800px) rotateX(8deg) scale(.96)}100%{opacity:1;transform:perspective(800px) rotateX(0) scale(1)}}
+@keyframes timerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.018)}}
+@keyframes confettiPop{0%{transform:translateY(8px) scale(.8);opacity:0}100%{transform:translateY(0) scale(1);opacity:1}}
 .kicker{font-size:.72rem;letter-spacing:.24em;color:var(--green);font-weight:800;text-transform:uppercase}
 h1{font-size:clamp(2.4rem,8vw,5.5rem);line-height:.92;letter-spacing:-.06em;margin:16px 0}
 h1 span{color:var(--green);display:block;text-shadow:0 0 28px #42e8e044}
@@ -28,19 +31,22 @@ p{color:#b8c3ba;line-height:1.55}.muted{color:var(--muted);font-size:.88rem}
 .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px}.actions .btn{flex:1}
 .panel{background:linear-gradient(145deg,#101d21,#081014);border:1px solid #28505a;border-radius:18px;padding:22px;box-shadow:0 14px 44px #0005}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:18px}
-.challenge{border:1px solid var(--accent,#28505a);background:linear-gradient(145deg,#101d21,#071014);border-radius:14px;padding:16px;min-height:145px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;color:var(--white)}
-.challenge .num{font-size:.7rem;color:var(--accent,var(--green));letter-spacing:.16em;font-weight:800}.challenge strong{font-size:1.1rem;text-transform:uppercase}.challenge small{color:#aebbb1}.challenge:hover{box-shadow:0 0 22px color-mix(in srgb,var(--accent) 18%,transparent)}
-.bigcard{border:1px solid var(--green);border-radius:18px;padding:30px 20px;text-align:center;background:radial-gradient(ellipse at 50% 0%,#123139,#081216 62%);box-shadow:0 0 35px #42e8e015}
+.challenge{border:1px solid var(--accent,#28505a);background:linear-gradient(145deg,#12252a,#071014 78%);border-radius:14px;padding:16px;min-height:145px;display:flex;flex-direction:column;justify-content:space-between;text-align:left;color:var(--white);transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
+.challenge .num{font-size:.7rem;color:var(--accent,var(--green));letter-spacing:.16em;font-weight:800}.challenge strong{font-size:1.1rem;text-transform:uppercase}.challenge small{color:#aebbb1}.challenge:hover{transform:translateY(-3px);box-shadow:0 12px 28px #0005,0 0 22px color-mix(in srgb,var(--accent) 22%,transparent)}.challenge:active{transform:scale(.985)}
+.bigcard{border:1px solid var(--green);border-radius:18px;padding:30px 20px;text-align:center;background:radial-gradient(ellipse at 50% 0%,#16414a,#081216 68%);box-shadow:0 0 35px #42e8e01a;animation:revealCard .42s ease both}
 .icon{font-size:2.7rem;margin-bottom:10px}.challenge-name{font-size:clamp(1.8rem,7vw,3.2rem);font-weight:950;letter-spacing:-.04em;text-transform:uppercase;margin:12px 0}.tag{display:inline-block;border:1px solid #2c686d;color:var(--green);border-radius:99px;padding:5px 10px;font-size:.7rem;letter-spacing:.14em}
 .timer-wrap{display:grid;place-items:center;margin:22px auto;max-width:330px}
-.timer{width:min(72vw,290px);aspect-ratio:1;border-radius:50%;border:10px solid var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 35px #42e8e026,inset 0 0 35px #42e8e010;position:relative}
+.timer{width:min(72vw,290px);aspect-ratio:1;border-radius:50%;border:10px solid var(--green);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 35px #42e8e026,inset 0 0 35px #42e8e010;position:relative;animation:glowPulse 2.2s ease-in-out infinite;transition:border-color .2s ease}
 .timer:before{content:"";position:absolute;inset:8px;border:1px solid #42e8e030;border-radius:50%}
-.time{font-size:clamp(3rem,12vw,4.6rem);font-weight:900;letter-spacing:-.06em;font-variant-numeric:tabular-nums}.time-label{color:var(--green);letter-spacing:.24em;font-size:.72rem;margin-top:5px}
+.time{font-size:clamp(3rem,12vw,4.6rem);font-weight:900;letter-spacing:-.06em;font-variant-numeric:tabular-nums;transition:color .2s ease}.time-label{color:var(--green);letter-spacing:.24em;font-size:.72rem;margin-top:5px}
 .field{display:flex;flex-direction:column;gap:8px;margin:14px 0}.field label{font-size:.78rem;color:#a9b9ac;letter-spacing:.1em;text-transform:uppercase}
 input,select{width:100%;background:#071014;color:var(--white);border:1px solid #35565d;border-radius:9px;padding:14px;outline:none}input:focus,select:focus{border-color:var(--green)}
 table{width:100%;border-collapse:collapse;margin-top:14px;font-size:.9rem}th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #203a40}th{color:#9bab9c;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}td:last-child,th:last-child{text-align:right}.rank{color:var(--green);font-weight:900}
 .notice{padding:12px 14px;border:1px solid #354b39;background:#0b171b;border-radius:10px;color:#b9c9bb;font-size:.83rem;margin-top:14px}
 footer{border-top:1px solid #1b343a;margin-top:36px;padding-top:16px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;color:#718b8e;font-size:.7rem;letter-spacing:.1em}
+.progress-shell{max-width:470px;margin-top:28px}.progress-track{height:4px;background:#183036;border-radius:99px;overflow:hidden}.progress-track span{display:block;height:100%;width:100%;background:linear-gradient(90deg,#168e91,#42e8e0);box-shadow:0 0 14px #42e8e066}.progress-caption{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;color:#729095;font-size:.62rem;letter-spacing:.1em;margin-top:9px}
+.prep-count{font-size:clamp(3.8rem,18vw,6rem);line-height:1;font-weight:950;color:var(--green);font-variant-numeric:tabular-nums;text-shadow:0 0 32px #42e8e055}.success-mark{font-size:3.4rem;animation:confettiPop .45s ease both}.timer.is-ending{border-color:#b5fff8;box-shadow:0 0 45px #42e8e066,inset 0 0 40px #42e8e01c}.subtle-divider{height:1px;background:linear-gradient(90deg,transparent,#24515a,transparent);margin:20px 0}
+
 @media(min-width:700px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{min-height:65vh}.panel{padding:30px}}
 </style>
 </head>
@@ -54,7 +60,7 @@ footer{border-top:1px solid #1b343a;margin-top:36px;padding-top:16px;display:fle
   <h1>SUPERA<br>TU <span>LÍMITE.</span></h1>
   <p>Seis desafíos. Sesenta segundos. Una oportunidad para darlo todo. Saca una tarjeta, completa el reto y registra tu resultado.</p>
   <div class="actions"><button class="btn" onclick="drawChallenge()">Sacar tarjeta ↗</button><button class="btn secondary" onclick="showScreen('all')">Ver los 6 retos</button></div>
-  <p class="muted">01 / 06 · SELECCIÓN ALEATORIA · CRONÓMETRO · RANKING</p>
+  <div class="progress-shell" aria-label="Seis desafíos disponibles"><div class="progress-track"><span></span></div><div class="progress-caption"><span>6 DESAFÍOS</span><span>60 SEGUNDOS</span><span>1 OBJETIVO: SUPERARTE</span></div></div>
  </div>
 </section>
 
@@ -74,14 +80,14 @@ footer{border-top:1px solid #1b343a;margin-top:36px;padding-top:16px;display:fle
 </section>
 
 <section id="timerScreen" class="screen">
- <div class="kicker">Desafío en curso</div><h2 id="timerTitle">Prepárate.</h2>
- <div class="timer-wrap"><div class="timer"><div id="time" class="time">01:00</div><div class="time-label">SEGUNDOS</div></div></div>
+ <div class="kicker">Desafío en curso // Concéntrate</div><h2 id="timerTitle">Prepárate.</h2><p class="muted" id="timerChallengeLabel">Tu reto comienza ahora.</p>
+ <div class="timer-wrap"><div class="timer" id="timerRing"><div id="time" class="time">01:00</div><div class="time-label">SEGUNDOS</div></div></div><div class="subtle-divider"></div>
  <p id="timerHint" style="text-align:center">Mantén una técnica controlada.</p>
  <div class="actions"><button class="btn secondary" onclick="cancelTimer()">Cancelar reto</button></div>
 </section>
 
 <section id="result" class="screen">
- <div class="kicker">Tiempo completado // Datos del participante</div><h2>Registra tu resultado.</h2>
+ <div class="kicker">Desafío completado // Buen trabajo</div><div class="success-mark" aria-hidden="true">✦</div><h2>¡Lo diste todo!</h2><p class="muted">Registra tu resultado para guardar tu marca en esta sesión.</p>
  <div id="finishedCard" class="bigcard"></div>
  <div class="panel" style="margin-top:16px">
   <div class="field"><label for="playerName">Nombre o apodo</label><input id="playerName" maxlength="24" placeholder="Ej. Andy" autocomplete="nickname"></div>
@@ -92,12 +98,12 @@ footer{border-top:1px solid #1b343a;margin-top:36px;padding-top:16px;display:fle
 </section>
 
 <section id="all" class="screen">
- <div class="kicker">Biblioteca de desafíos</div><h2>Elige conocer los retos.</h2><p class="muted">La selección aleatoria se hace desde el botón principal.</p>
+ <div class="kicker">Biblioteca de desafíos</div><h2>Explora los retos.</h2><p class="muted">La selección aleatoria se hace desde el botón principal.</p>
  <div id="allGrid" class="grid"></div><div class="actions"><button class="btn" onclick="showScreen('home')">Volver al inicio</button></div>
 </section>
 
 <section id="ranking" class="screen">
- <div class="kicker">Resultados almacenados en este iPad</div><h2>Clasificación.</h2>
+ <div class="kicker">Tu historial local</div><h2>Clasificación.</h2>
  <div class="field"><label for="filterChallenge">Filtrar por desafío</label><select id="filterChallenge" onchange="renderRanking()"><option value="all">Todos los desafíos</option></select></div>
  <div class="panel"><div id="rankingTable"></div></div>
  <div class="notice">Los resultados se guardan en este navegador. Para compartir un ranking entre varios dispositivos se necesita una base de datos en línea.</div>
@@ -114,18 +120,19 @@ const challenges=[
 {id:5,name:"Mountain climbers",icon:"⌁",color:"#42e8e0",instruction:"Alterna las rodillas hacia el pecho con control durante 60 segundos.",hint:"Mantén los hombros sobre las manos y evita rebotar la cadera.",unit:"repeticiones (cada rodilla cuenta)"},
 {id:6,name:"Burpees",icon:"⚡",color:"#42e8e0",instruction:"Completa tantos burpees técnicamente correctos como puedas en 60 segundos.",hint:"Escoge una variante adecuada a tu condición y controla los aterrizajes.",unit:"repeticiones"}
 ];
-let current=null, bag=[], round=1, interval=null, remaining=60, results=JSON.parse(localStorage.getItem("reto60_results")||"[]");
+let current=null, bag=[], round=1, interval=null, remaining=60, prepInterval=null, prepCount=3, results=JSON.parse(localStorage.getItem("reto60_results")||"[]");
 function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));document.getElementById(id).classList.add("active");if(id==="ranking")renderRanking();if(id==="all")renderAll();window.scrollTo({top:0,behavior:"smooth"})}
-function drawChallenge(){if(bag.length===0){bag=challenges.map(c=>c.id);round=bag.length===6?1:round+1;document.getElementById("roundText").textContent="Ronda "+round;}let idx=Math.floor(Math.random()*bag.length);let id=bag.splice(idx,1)[0];current=challenges.find(c=>c.id===id);document.getElementById("roundText").textContent="Ronda "+round+" · "+(7-bag.length)+"/6";document.getElementById("drawCard").innerHTML=cardHTML(current);showScreen("draw")}
+function drawChallenge(){if(bag.length===0){bag=challenges.map(c=>c.id);if(round===0)round=1;else if(current)round++;}let idx=Math.floor(Math.random()*bag.length);let id=bag.splice(idx,1)[0];current=challenges.find(c=>c.id===id);document.getElementById("roundText").textContent="Ronda "+round+" · "+(6-bag.length)+"/6";document.getElementById("drawCard").innerHTML=cardHTML(current);showScreen("draw")}
 function cardHTML(c){return `<div class="icon" style="color:${c.color}">${c.icon}</div><span class="tag" style="border-color:${c.color};color:${c.color}">RETO 0${c.id}</span><div class="challenge-name">${c.name}</div><p>${c.instruction}</p>`}
 function showDetail(){if(!current)return;document.getElementById("detailCard").innerHTML=cardHTML(current);document.getElementById("detailCard").innerHTML+=`<p style="color:${current.color}">${current.hint}</p>`;showScreen("detail")}
-function startTimer(){remaining=60;document.getElementById("timerTitle").textContent=current.name;document.getElementById("timerHint").textContent=current.hint;updateTime();showScreen("timerScreen");interval=setInterval(()=>{remaining--;updateTime();if(remaining<=0){clearInterval(interval);interval=null;finishTimer()}},1000)}
+function startTimer(){if(!current)return;clearInterval(interval);clearInterval(prepInterval);remaining=60;prepCount=3;document.getElementById("timerTitle").textContent=current.name;document.getElementById("timerChallengeLabel").textContent="Prepárate. Comenzamos en…";document.getElementById("timerHint").textContent=current.hint;document.getElementById("time").textContent="03";document.querySelector(".time-label").textContent="PREPÁRATE";document.getElementById("timerRing").classList.remove("is-ending");showScreen("timerScreen");prepInterval=setInterval(()=>{prepCount--;if(prepCount>0){document.getElementById("time").textContent=String(prepCount).padStart(2,"0")}else{clearInterval(prepInterval);prepInterval=null;beginChallengeTimer()}},1000)}
+function beginChallengeTimer(){remaining=60;document.getElementById("timerChallengeLabel").textContent="¡Vamos! Mantén el ritmo y la técnica.";document.querySelector(".time-label").textContent="SEGUNDOS";updateTime();interval=setInterval(()=>{remaining--;updateTime();if(remaining<=10)document.getElementById("timerRing").classList.add("is-ending");if(remaining<=0){clearInterval(interval);interval=null;finishTimer()}},1000)}
 function updateTime(){let m=Math.floor(remaining/60),s=remaining%60;document.getElementById("time").textContent=String(m).padStart(2,"0")+":"+String(s).padStart(2,"0")}
-function cancelTimer(){if(interval){clearInterval(interval);interval=null}showScreen("detail")}
-function finishTimer(){document.getElementById("finishedCard").innerHTML=`<div class="icon" style="color:${current.color}">✓</div><span class="tag">RETO 0${current.id}</span><div class="challenge-name" style="font-size:2rem">¡Tiempo terminado!</div><p>${current.name}</p>`;document.getElementById("scoreLabel").textContent="Resultado · "+current.unit;document.getElementById("score").value="";showScreen("result");if(navigator.vibrate)navigator.vibrate([100,60,100])}
+function cancelTimer(){if(interval){clearInterval(interval);interval=null}if(prepInterval){clearInterval(prepInterval);prepInterval=null}showScreen("detail")}
+function finishTimer(){document.getElementById("finishedCard").innerHTML=`<div class="success-mark" style="color:${current.color}">✓</div><span class="tag">RETO 0${current.id}</span><div class="challenge-name" style="font-size:2rem">¡Tiempo terminado!</div><p>${current.name}</p><p class="muted">Cada repetición cuenta. Registra tu marca.</p>`;document.getElementById("scoreLabel").textContent="Resultado · "+current.unit;document.getElementById("score").value="";showScreen("result");if(navigator.vibrate)navigator.vibrate([100,60,100])}
 function saveResult(){let name=document.getElementById("playerName").value.trim(),score=Number(document.getElementById("score").value);if(!name){alert("Escribe tu nombre o apodo.");return}if(document.getElementById("score").value===""||!Number.isFinite(score)||score<0){alert("Escribe un resultado válido.");return}results.push({name,score,challengeId:current.id,challenge:current.name,date:new Date().toISOString()});localStorage.setItem("reto60_results",JSON.stringify(results));document.getElementById("playerName").value="";showScreen("ranking")}
 function renderAll(){document.getElementById("allGrid").innerHTML=challenges.map(c=>`<button class="challenge" style="--accent:${c.color}" onclick="current=challenges.find(x=>x.id===${c.id});showScreen('detail');document.getElementById('detailCard').innerHTML=cardHTML(current)+'<p>'+current.hint+'</p>'"><span class="num">RETO 0${c.id}</span><strong>${c.name}</strong><small>${c.unit}</small></button>`).join("")}
-function renderRanking(){let sel=document.getElementById("filterChallenge");if(sel.options.length===1)challenges.forEach(c=>{let o=document.createElement("option");o.value=c.id;o.textContent=c.name;sel.appendChild(o)});let list=results.filter(r=>sel.value==="all"||String(r.challengeId)===sel.value).sort((a,b)=>b.score-a.score);let host=document.getElementById("rankingTable");if(!list.length){host.innerHTML='<p class="muted">Todavía no hay resultados. ¡Sé el primero en participar!</p>';return}host.innerHTML='<table><thead><tr><th>#</th><th>Participante</th><th>Desafío</th><th>Resultado</th></tr></thead><tbody>'+list.map((r,i)=>`<tr><td class="rank">${i+1}</td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(r.challenge)}</td><td><strong>${r.score}</strong></td></tr>`).join("")+'</tbody></table>'}
+function renderRanking(){let sel=document.getElementById("filterChallenge");if(sel.options.length===1)challenges.forEach(c=>{let o=document.createElement("option");o.value=c.id;o.textContent=c.name;sel.appendChild(o)});let list=results.filter(r=>sel.value==="all"||String(r.challengeId)===sel.value).sort((a,b)=>sel.value==="all"?(new Date(b.date)-new Date(a.date)):(b.score-a.score));let host=document.getElementById("rankingTable");if(!list.length){host.innerHTML='<p class="muted">Todavía no hay resultados. ¡Sé el primero en participar!</p>';return}host.innerHTML='<table><thead><tr><th>#</th><th>Participante</th><th>Desafío</th><th>Resultado</th></tr></thead><tbody>'+list.map((r,i)=>`<tr><td class="rank">${i+1}</td><td>${escapeHTML(r.name)}</td><td>${escapeHTML(r.challenge)}</td><td><strong>${r.score}</strong></td></tr>`).join("")+'</tbody></table>'}
 function escapeHTML(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function exportCSV(){if(!results.length){alert("Todavía no hay resultados para exportar.");return}let rows=[["Nombre","Desafío","Resultado","Fecha"],...results.map(r=>[r.name,r.challenge,r.score,new Date(r.date).toLocaleString("es-CO")])];let csv=rows.map(row=>row.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\n");let blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="reto60-resultados.csv";a.click();URL.revokeObjectURL(url)}
 renderAll();
